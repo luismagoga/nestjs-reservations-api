@@ -6,6 +6,9 @@ import {
   Request,
   UseGuards,
   Param,
+  Delete,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
 import { ReservationService } from "./reservations.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
@@ -19,6 +22,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { CreateReservationDto } from "./dto/reservation-input.dto";
+import { ReservationResponseDto } from "./dto/reservation-output.dto";
+import { plainToInstance } from "class-transformer";
 
 @Controller("reservations")
 @ApiTags("Reservations")
@@ -29,31 +35,13 @@ export class ReservationController {
 
   @Post()
   @ApiBody({
-    schema: {
-      type: "object",
-      properties: {
-        resourceId: { type: "string" },
-        start: { type: "string" },
-        end: { type: "string" },
-        description: { type: "string" },
-      },
-      required: ["identifier", "start", "end", "description"],
-    },
+    type: CreateReservationDto,
   })
   @ApiOperation({ summary: "Register a reservation" })
   @ApiResponse({
     status: 201,
-    description: "User successfully registered",
-    schema: {
-      type: "object",
-      properties: {
-        _id: { type: "string", example: "6833977686004527398b6b90" },
-        resourceId: { type: "string", example: "68339e2e8b5549f2f06863cf" },
-        start: { type: "string", example: "2025-05-25T00:00:00.000Z" },
-        end: { type: "string", example: "2025-05-25T23:59:59.999Z" },
-        description: { type: "string", example: "Registro vacaciones" },
-      },
-    },
+    description: "Reservation successfully registered",
+    type: ReservationResponseDto,
   })
   @ApiConflictResponse({
     description: "Resource already exists",
@@ -86,28 +74,29 @@ export class ReservationController {
       },
     },
   })
-  create(
-    @Body()
-    body: {
-      resourceId: string;
-      start: string;
-      end: string;
-      description?: string;
-    },
+  async create(
+    @Body() body: CreateReservationDto,
     @Request() req
-  ) {
-    const tenantId = req.user.tenantId;
-    return this.reservationService.createReservation(
-      tenantId,
-      body.resourceId,
-      new Date(body.start),
-      new Date(body.end),
-      body.description
+  ): Promise<ReservationResponseDto> {
+    return plainToInstance(
+      ReservationResponseDto,
+      await this.reservationService.createReservation(
+        req.user.tenantId,
+        body.resourceId,
+        body.start,
+        body.end,
+        body.description
+      )
     );
   }
 
   @Get(":resourceId")
   @ApiOperation({ summary: "Get all reservations by resourceId and tenantId" })
+  @ApiResponse({
+    status: 200,
+    description: "Get reservation by resourceId and tenantId",
+    type: [ReservationResponseDto],
+  })
   @ApiUnauthorizedResponse({
     description: "Unauthorized",
     schema: {
@@ -129,8 +118,55 @@ export class ReservationController {
       },
     },
   })
-  list(@Param("resourceId") resourceId: string, @Request() req) {
-    const tenantId = req.user.tenantId;
-    return this.reservationService.listReservations(tenantId, resourceId);
+  async list(
+    @Param("resourceId") resourceId: string,
+    @Request() req
+  ): Promise<ReservationResponseDto[]> {
+    return plainToInstance(
+      ReservationResponseDto,
+      await this.reservationService.listReservations(
+        req.user.tenantId,
+        resourceId
+      )
+    );
+  }
+
+  @Delete(":resourceId/:reservationId")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: "Delete reservation" })
+  @ApiResponse({
+    status: 204,
+    description: "Reservation successfully deleted",
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        message: { type: "string", example: "Unauthorized" },
+        statusCode: { type: "number", example: 401 },
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    description: "Not Found",
+    schema: {
+      type: "object",
+      properties: {
+        message: { type: "string", example: "Not found" },
+        statusCode: { type: "number", example: 404 },
+      },
+    },
+  })
+  async delete(
+    @Param("resourceId") resourceId: string,
+    @Param("reservationId") reservationId: string,
+    @Request() req
+  ): Promise<void> {
+    await this.reservationService.deleteByTenantIdAndResourceIdAndId(
+      req.user.tenantId,
+      resourceId,
+      reservationId
+    );
   }
 }

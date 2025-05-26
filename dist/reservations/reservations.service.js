@@ -30,6 +30,18 @@ let ReservationService = class ReservationService {
         });
         if (!resource)
             throw new common_1.NotFoundException("Resource not found");
+        const query = {
+            resourceId,
+            $or: [
+                {
+                    start: { $lte: end },
+                    end: { $gte: start },
+                },
+            ],
+        };
+        const overlapExists = await this.reservationModel.find(query);
+        if (overlapExists?.length)
+            throw new common_1.ConflictException("Reservation already exists");
         return this.reservationModel.create({
             resourceId: resource._id,
             start,
@@ -44,7 +56,21 @@ let ReservationService = class ReservationService {
         });
         if (!resource)
             throw new common_1.NotFoundException("Resource not found");
-        return this.reservationModel.find({ resourceId: resource._id });
+        return this.reservationModel.find({ resourceId: resource._id }).lean();
+    }
+    async deleteByTenantIdAndResourceIdAndId(tenantId, resourceId, reservationId) {
+        const resource = await this.resourceModel.findOne({
+            tenantId,
+            _id: resourceId,
+        });
+        if (!resource)
+            throw new common_1.NotFoundException("Resource not found");
+        const result = await this.reservationModel.findByIdAndDelete({
+            _id: new mongoose_2.Types.ObjectId(reservationId),
+        });
+        if (!result) {
+            throw new common_1.NotFoundException(`reservationID ${reservationId} not found`);
+        }
     }
 };
 exports.ReservationService = ReservationService;

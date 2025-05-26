@@ -21,11 +21,11 @@ __decorate([
 ], Reservation.prototype, "resourceId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Reservation.prototype, "start", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], Reservation.prototype, "end", void 0);
 __decorate([
     (0, mongoose_1.Prop)(),

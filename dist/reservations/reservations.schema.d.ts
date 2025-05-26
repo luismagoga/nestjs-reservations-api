@@ -1,8 +1,8 @@
 import { Document } from "mongoose";
 export declare class Reservation extends Document {
     resourceId: string;
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     description?: string;
 }
 export declare const ReservationSchema: import("mongoose").Schema<Reservation, import("mongoose").Model<Reservation, any, any, any, Document<unknown, any, Reservation, any> & Reservation & Required<{

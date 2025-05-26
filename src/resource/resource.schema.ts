@@ -14,3 +14,5 @@ export class Resource extends Document {
 }
 
 export const ResourceSchema = SchemaFactory.createForClass(Resource);
+
+ResourceSchema.index({ tenantId: 1, identifier: 1 }, { unique: true });

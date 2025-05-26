@@ -7,10 +7,10 @@ export class Reservation extends Document {
   resourceId: string;
 
   @Prop({ required: true })
-  start: Date;
+  start: string;
 
   @Prop({ required: true })
-  end: Date;
+  end: string;
 
   @Prop()
   description?: string;

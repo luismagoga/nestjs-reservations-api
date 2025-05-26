@@ -32,6 +32,12 @@ let ResourceService = class ResourceService {
             throw new common_1.ConflictException("Resource already exists");
         return this.resourceModel.create({ tenantId, identifier });
     }
+    async getAllResourcesByTenantId(tenantId) {
+        const companyExists = await this.companyModel.findOne({ tenantId });
+        if (!companyExists)
+            throw new common_1.ConflictException("Invalid tenantId");
+        return this.resourceModel.find({ tenantId }).lean();
+    }
 };
 exports.ResourceService = ResourceService;
 exports.ResourceService = ResourceService = __decorate([

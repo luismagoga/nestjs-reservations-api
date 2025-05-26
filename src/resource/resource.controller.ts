@@ -1,16 +1,25 @@
-import { Controller, Post, Body, UseGuards, Request } from "@nestjs/common";
-import { ResourceService } from "./resource.service";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Request,
+  UseGuards,
+} from "@nestjs/common";
 import {
   ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
-  ApiForbiddenResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
   ApiUnauthorizedResponse,
 } from "@nestjs/swagger";
+import { plainToInstance } from "class-transformer";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { CreateResourceDto } from "./dto/resource-input.dto";
+import { ResourceResponseDto } from "./dto/resource-output.dto";
+import { ResourceService } from "./resource.service";
 
 @Controller("resources")
 @ApiTags("Resources")
@@ -21,27 +30,13 @@ export class ResourceController {
 
   @Post()
   @ApiBody({
-    schema: {
-      type: "object",
-      properties: {
-        identifier: { type: "string", example: "XXXX" },
-      },
-      required: ["identifier"],
-    },
+    type: CreateResourceDto,
   })
   @ApiOperation({ summary: "Register a new resource" })
   @ApiResponse({
     status: 201,
-    description: "User successfully registered",
-    schema: {
-      type: "object",
-      properties: {
-        tenantId: { type: "string", example: "tenant-123" },
-        identifier: { type: "string", example: "XXXX" },
-        _id: { type: "number", example: "6833977686004527398b6b90" },
-        createdAt: { type: "string", example: "2025-05-25T22:19:34.226Z" },
-      },
-    },
+    description: "Resource successfully registered",
+    type: ResourceResponseDto,
   })
   @ApiConflictResponse({
     description: "Resource already exists",
@@ -64,8 +59,40 @@ export class ResourceController {
       },
     },
   })
-  create(@Body() body: { identifier: string }, @Request() req) {
-    const tenantId = req.user.tenantId;
-    return this.resourceService.createResource(tenantId, body.identifier);
+  async create(
+    @Body() body: CreateResourceDto,
+    @Request() req
+  ): Promise<ResourceResponseDto> {
+    return plainToInstance(
+      ResourceResponseDto,
+      await this.resourceService.createResource(
+        req.user.tenantId,
+        body.identifier
+      )
+    );
+  }
+
+  @Get()
+  @ApiOperation({ summary: "Get all resources from tenantId" })
+  @ApiResponse({
+    status: 200,
+    description: "Resources list from tenantId",
+    type: [ResourceResponseDto],
+  })
+  @ApiUnauthorizedResponse({
+    description: "Unauthorized",
+    schema: {
+      type: "object",
+      properties: {
+        message: { type: "string", example: "Unauthorized" },
+        statusCode: { type: "number", example: 401 },
+      },
+    },
+  })
+  async getAll(@Request() req): Promise<ResourceResponseDto[]> {
+    return plainToInstance(
+      ResourceResponseDto,
+      await this.resourceService.getAllResourcesByTenantId(req.user.tenantId)
+    );
   }
 }

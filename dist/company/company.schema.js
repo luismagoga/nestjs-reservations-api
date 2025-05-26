@@ -31,4 +31,5 @@ exports.Company = Company = __decorate([
     (0, mongoose_1.Schema)()
 ], Company);
 exports.CompanySchema = mongoose_1.SchemaFactory.createForClass(Company);
+exports.CompanySchema.index({ tenantId: 1, apiKey: 1, apiSecret: 1 }, { unique: true });
 //# sourceMappingURL=company.schema.js.map

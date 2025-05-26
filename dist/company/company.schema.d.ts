@@ -1,4 +1,4 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 export declare class Company extends Document {
     tenantId: string;
     apiKey: string;

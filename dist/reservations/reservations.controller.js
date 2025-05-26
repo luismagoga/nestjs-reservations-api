@@ -17,48 +17,34 @@ const common_1 = require("@nestjs/common");
 const reservations_service_1 = require("./reservations.service");
 const jwt_auth_guard_1 = require("../auth/jwt-auth.guard");
 const swagger_1 = require("@nestjs/swagger");
+const reservation_input_dto_1 = require("./dto/reservation-input.dto");
+const reservation_output_dto_1 = require("./dto/reservation-output.dto");
+const class_transformer_1 = require("class-transformer");
 let ReservationController = class ReservationController {
     constructor(reservationService) {
         this.reservationService = reservationService;
     }
-    create(body, req) {
-        const tenantId = req.user.tenantId;
-        return this.reservationService.createReservation(tenantId, body.resourceId, new Date(body.start), new Date(body.end), body.description);
+    async create(body, req) {
+        return (0, class_transformer_1.plainToInstance)(reservation_output_dto_1.ReservationResponseDto, await this.reservationService.createReservation(req.user.tenantId, body.resourceId, body.start, body.end, body.description));
     }
-    list(resourceId, req) {
-        const tenantId = req.user.tenantId;
-        return this.reservationService.listReservations(tenantId, resourceId);
+    async list(resourceId, req) {
+        return (0, class_transformer_1.plainToInstance)(reservation_output_dto_1.ReservationResponseDto, await this.reservationService.listReservations(req.user.tenantId, resourceId));
+    }
+    async delete(resourceId, reservationId, req) {
+        await this.reservationService.deleteByTenantIdAndResourceIdAndId(req.user.tenantId, resourceId, reservationId);
     }
 };
 exports.ReservationController = ReservationController;
 __decorate([
     (0, common_1.Post)(),
     (0, swagger_1.ApiBody)({
-        schema: {
-            type: "object",
-            properties: {
-                resourceId: { type: "string" },
-                start: { type: "string" },
-                end: { type: "string" },
-                description: { type: "string" },
-            },
-            required: ["identifier", "start", "end", "description"],
-        },
+        type: reservation_input_dto_1.CreateReservationDto,
     }),
     (0, swagger_1.ApiOperation)({ summary: "Register a reservation" }),
     (0, swagger_1.ApiResponse)({
         status: 201,
-        description: "User successfully registered",
-        schema: {
-            type: "object",
-            properties: {
-                _id: { type: "string", example: "6833977686004527398b6b90" },
-                resourceId: { type: "string", example: "68339e2e8b5549f2f06863cf" },
-                start: { type: "string", example: "2025-05-25T00:00:00.000Z" },
-                end: { type: "string", example: "2025-05-25T23:59:59.999Z" },
-                description: { type: "string", example: "Registro vacaciones" },
-            },
-        },
+        description: "Reservation successfully registered",
+        type: reservation_output_dto_1.ReservationResponseDto,
     }),
     (0, swagger_1.ApiConflictResponse)({
         description: "Resource already exists",
@@ -94,12 +80,17 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [reservation_input_dto_1.CreateReservationDto, Object]),
+    __metadata("design:returntype", Promise)
 ], ReservationController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(":resourceId"),
     (0, swagger_1.ApiOperation)({ summary: "Get all reservations by resourceId and tenantId" }),
+    (0, swagger_1.ApiResponse)({
+        status: 200,
+        description: "Get reservation by resourceId and tenantId",
+        type: [reservation_output_dto_1.ReservationResponseDto],
+    }),
     (0, swagger_1.ApiUnauthorizedResponse)({
         description: "Unauthorized",
         schema: {
@@ -125,8 +116,43 @@ __decorate([
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ReservationController.prototype, "list", null);
+__decorate([
+    (0, common_1.Delete)(":resourceId/:reservationId"),
+    (0, common_1.HttpCode)(common_1.HttpStatus.NO_CONTENT),
+    (0, swagger_1.ApiOperation)({ summary: "Delete reservation" }),
+    (0, swagger_1.ApiResponse)({
+        status: 204,
+        description: "Reservation successfully deleted",
+    }),
+    (0, swagger_1.ApiUnauthorizedResponse)({
+        description: "Unauthorized",
+        schema: {
+            type: "object",
+            properties: {
+                message: { type: "string", example: "Unauthorized" },
+                statusCode: { type: "number", example: 401 },
+            },
+        },
+    }),
+    (0, swagger_1.ApiNotFoundResponse)({
+        description: "Not Found",
+        schema: {
+            type: "object",
+            properties: {
+                message: { type: "string", example: "Not found" },
+                statusCode: { type: "number", example: 404 },
+            },
+        },
+    }),
+    __param(0, (0, common_1.Param)("resourceId")),
+    __param(1, (0, common_1.Param)("reservationId")),
+    __param(2, (0, common_1.Request)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Object]),
+    __metadata("design:returntype", Promise)
+], ReservationController.prototype, "delete", null);
 exports.ReservationController = ReservationController = __decorate([
     (0, common_1.Controller)("reservations"),
     (0, swagger_1.ApiTags)("Reservations"),

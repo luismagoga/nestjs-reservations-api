@@ -31,4 +31,5 @@ exports.Resource = Resource = __decorate([
     (0, mongoose_1.Schema)()
 ], Resource);
 exports.ResourceSchema = mongoose_1.SchemaFactory.createForClass(Resource);
+exports.ResourceSchema.index({ tenantId: 1, identifier: 1 }, { unique: true });
 //# sourceMappingURL=resource.schema.js.map
