@@ -11,6 +11,7 @@ const common_1 = require("@nestjs/common");
 const mongoose_1 = require("@nestjs/mongoose");
 const auth_module_1 = require("./auth/auth.module");
 const reservations_module_1 = require("./reservations/reservations.module");
+const config_1 = require("@nestjs/config");
 const resource_module_1 = require("./resource/resource.module");
 let AppModule = class AppModule {
 };
@@ -18,6 +19,7 @@ exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
             mongoose_1.MongooseModule.forRoot(process.env.MONGO_URI),
             auth_module_1.AuthModule,
             reservations_module_1.ReservationsModule,

@@ -6,9 +6,11 @@ import { AuthController } from "./auth.controller";
 import { Company, CompanySchema } from "../company/company.schema";
 import { PassportModule } from "@nestjs/passport";
 import { JwtStrategy } from "./jwt.strategy";
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forFeature([{ name: Company.name, schema: CompanySchema }]),
     PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.register({

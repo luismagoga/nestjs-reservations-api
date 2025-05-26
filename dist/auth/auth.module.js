@@ -15,12 +15,14 @@ const auth_controller_1 = require("./auth.controller");
 const company_schema_1 = require("../company/company.schema");
 const passport_1 = require("@nestjs/passport");
 const jwt_strategy_1 = require("./jwt.strategy");
+const config_1 = require("@nestjs/config");
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
 exports.AuthModule = AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
+            config_1.ConfigModule.forRoot({ isGlobal: true }),
             mongoose_1.MongooseModule.forFeature([{ name: company_schema_1.Company.name, schema: company_schema_1.CompanySchema }]),
             passport_1.PassportModule.register({ defaultStrategy: "jwt" }),
             jwt_1.JwtModule.register({
