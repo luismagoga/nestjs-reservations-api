@@ -1,1 +1,19 @@
-JWT_SECRET=supersecretjwtkey
+services:
+  - type: web
+    name: nestjs-reservations-api
+    env: node
+    plan: free
+    buildCommand: |
+      yarn install
+      yarn build
+    startCommand: yarn start:prod
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: MONGO_URI
+        value: mongodb+srv://userreservations:NE33YK4UDfBjIZg2@cluster-reservations.smhlwml.mongodb.net/
+      - key: JWT_SECRET
+        value: supersecretjwtkey
