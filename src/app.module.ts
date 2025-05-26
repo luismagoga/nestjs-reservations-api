@@ -6,7 +6,7 @@ import { ResourceModule } from "./resource/resource.module";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://localhost:27017/reservations"),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     AuthModule,
     ReservationsModule,
     ResourceModule,
