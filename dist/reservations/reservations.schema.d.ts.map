@@ -1,0 +1,1 @@
+{"version":3,"file":"reservations.schema.d.ts","sourceRoot":"","sources":["../../src/reservations/reservations.schema.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,QAAQ,EAAE,MAAM,UAAU,CAAC;AAEpC,qBACa,WAAY,SAAQ,QAAQ;IAEvC,UAAU,EAAE,MAAM,CAAC;IAGnB,KAAK,EAAE,IAAI,CAAC;IAGZ,GAAG,EAAE,IAAI,CAAC;IAGV,WAAW,CAAC,EAAE,MAAM,CAAC;CACtB;AAED,eAAO,MAAM,iBAAiB;;;;;;;;EAA4C,CAAC"}
