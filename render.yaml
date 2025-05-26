@@ -14,6 +14,6 @@ services:
       - key: PORT
         value: 3000
       - key: MONGO_URI
-        value: mongodb+srv://userreservations:NE33YK4UDfBjIZg2@cluster-reservations.smhlwml.mongodb.net/
+        value: mongodb+srv://userreservations:NE33YK4UDfBjIZg2@cluster-reservations.smhlwml.mongodb.net/reservations
       - key: JWT_SECRET
         value: supersecretjwtkey
