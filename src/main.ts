@@ -5,6 +5,11 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  });
+
   const config = new DocumentBuilder()
     .setTitle("Reservations API")
     .setDescription("API para gestion de reservas de recursos por empresas.")
