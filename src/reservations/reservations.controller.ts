@@ -85,6 +85,7 @@ export class ReservationController {
         body.resourceId,
         body.start,
         body.end,
+        body.user,
         body.description
       )
     );

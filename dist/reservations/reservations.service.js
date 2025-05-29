@@ -23,7 +23,7 @@ let ReservationService = class ReservationService {
         this.reservationModel = reservationModel;
         this.resourceModel = resourceModel;
     }
-    async createReservation(tenantId, resourceId, start, end, description) {
+    async createReservation(tenantId, resourceId, start, end, user, description) {
         const resource = await this.resourceModel.findOne({
             tenantId,
             _id: resourceId,
@@ -46,6 +46,7 @@ let ReservationService = class ReservationService {
             resourceId: resource._id,
             start,
             end,
+            user,
             description,
         });
     }

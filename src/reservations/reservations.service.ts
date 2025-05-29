@@ -21,6 +21,7 @@ export class ReservationService {
     resourceId: string,
     start: string,
     end: string,
+    user?: string,
     description?: string
   ): Promise<Reservation> {
     const resource = await this.resourceModel.findOne({
@@ -45,6 +46,7 @@ export class ReservationService {
       resourceId: resource._id,
       start,
       end,
+      user,
       description,
     });
   }

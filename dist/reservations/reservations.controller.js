@@ -25,7 +25,7 @@ let ReservationController = class ReservationController {
         this.reservationService = reservationService;
     }
     async create(body, req) {
-        return (0, class_transformer_1.plainToInstance)(reservation_output_dto_1.ReservationResponseDto, await this.reservationService.createReservation(req.user.tenantId, body.resourceId, body.start, body.end, body.description));
+        return (0, class_transformer_1.plainToInstance)(reservation_output_dto_1.ReservationResponseDto, await this.reservationService.createReservation(req.user.tenantId, body.resourceId, body.start, body.end, body.user, body.description));
     }
     async list(resourceId, req) {
         return (0, class_transformer_1.plainToInstance)(reservation_output_dto_1.ReservationResponseDto, await this.reservationService.listReservations(req.user.tenantId, resourceId));
