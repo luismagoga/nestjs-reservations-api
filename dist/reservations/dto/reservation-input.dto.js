@@ -46,4 +46,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateReservationDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        description: "Email de usuario para confirmación de reserva.",
+        example: "manuel@gmail.com",
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateReservationDto.prototype, "user", void 0);
 //# sourceMappingURL=reservation-input.dto.js.map

@@ -4,5 +4,6 @@ export declare class ReservationResponseDto {
     start: string;
     end: string;
     description: string;
+    user: string;
 }
 //# sourceMappingURL=reservation-output.dto.d.ts.map

@@ -37,4 +37,11 @@ export class ReservationResponseDto {
   })
   @Expose()
   description: string;
+
+  @ApiProperty({
+    description: "Email de usuario de la reserva",
+    example: "manuel@gmail.com",
+  })
+  @Expose()
+  user: string;
 }

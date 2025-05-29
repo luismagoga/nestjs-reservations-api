@@ -14,6 +14,9 @@ export class Reservation extends Document {
 
   @Prop()
   description?: string;
+
+  @Prop()
+  user?: string;
 }
 
 export const ReservationSchema = SchemaFactory.createForClass(Reservation);

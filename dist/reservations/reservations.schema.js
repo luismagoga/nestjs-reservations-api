@@ -31,6 +31,10 @@ __decorate([
     (0, mongoose_1.Prop)(),
     __metadata("design:type", String)
 ], Reservation.prototype, "description", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], Reservation.prototype, "user", void 0);
 exports.Reservation = Reservation = __decorate([
     (0, mongoose_1.Schema)()
 ], Reservation);

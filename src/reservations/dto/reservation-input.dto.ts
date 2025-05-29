@@ -28,4 +28,12 @@ export class CreateReservationDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @ApiPropertyOptional({
+    description: "Email de usuario para confirmación de reserva.",
+    example: "manuel@gmail.com",
+  })
+  @IsOptional()
+  @IsString()
+  user?: string;
 }

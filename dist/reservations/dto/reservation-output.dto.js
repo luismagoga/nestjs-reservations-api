@@ -55,6 +55,14 @@ __decorate([
     (0, class_transformer_1.Expose)(),
     __metadata("design:type", String)
 ], ReservationResponseDto.prototype, "description", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "Email de usuario de la reserva",
+        example: "manuel@gmail.com",
+    }),
+    (0, class_transformer_1.Expose)(),
+    __metadata("design:type", String)
+], ReservationResponseDto.prototype, "user", void 0);
 exports.ReservationResponseDto = ReservationResponseDto = __decorate([
     (0, class_transformer_1.Exclude)()
 ], ReservationResponseDto);
